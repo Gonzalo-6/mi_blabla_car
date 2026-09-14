@@ -94,7 +94,7 @@ def load_to_db(data):
         # DRIVER_COMMUTES
         
 
-        pdb.set_trace()
+        
         for _, row in data['drivers'].iterrows():
             cursor.execute("""
                 INSERT INTO mi_blabla_car.driver_commutes (commute_id, user_id, seats_offered)
@@ -108,6 +108,7 @@ def load_to_db(data):
 
         
         # PASSENGER_COMMUTES
+        
         
         for _, row in data['passengers'].iterrows():
             cursor.execute("""
