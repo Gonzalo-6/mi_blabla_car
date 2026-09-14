@@ -112,11 +112,11 @@ def transform_data(drivers_df, passengers_df):
     # 7. DRIVER / PASSENGER
   
     
-    df_driver = drivers_df[['id','seats_offered']].rename(columns={'id':'commute_id'})
+    df_driver = drivers_df[['id', 'user_id', 'seats_offered']].rename(columns={'id':'commute_id'})
     
     
     if 'seats_requested' in passengers_df.columns:
-        df_passenger = passengers_df[['id','seats_requested']].rename(columns={'id':'commute_id'})
+        df_passenger = passengers_df[['id', 'user_id', 'seats_requested']].rename(columns={'id':'commute_id'})
     else:
         df_passenger = passengers_df[['id']].copy()
         df_passenger['seats_requested'] = 1

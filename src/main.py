@@ -2,6 +2,7 @@ from src.extract import load_data
 from src.transform import transform_data
 from src.load import load_to_db
 
+
 drivers, passengers = load_data()
 
 data = transform_data(drivers, passengers)

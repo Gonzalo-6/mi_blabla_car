@@ -1,5 +1,6 @@
 import psycopg2
 import pandas as pd
+import pdb
 
 
 def get_connection():
@@ -22,7 +23,7 @@ def load_to_db(data):
         
         # USERS
         
-        for _, row in data['users'].iterrows():
+        '''for _, row in data['users'].iterrows():
             cursor.execute("""
                 INSERT INTO mi_blabla_car.users (user_id)
                 VALUES (%s)
@@ -87,18 +88,21 @@ def load_to_db(data):
                 clean_value(row['leaves_at']),
                 clean_value(row['created_at']),
                 clean_value(row['deleted_at'])
-            ))
+            ))'''
 
       
         # DRIVER_COMMUTES
         
+
+        pdb.set_trace()
         for _, row in data['drivers'].iterrows():
             cursor.execute("""
-                INSERT INTO mi_blabla_car.driver_commutes (commute_id, seats_offered)
-                VALUES (%s, %s)
+                INSERT INTO mi_blabla_car.driver_commutes (commute_id, user_id, seats_offered)
+                VALUES (%s, %s,%s)
                 ON CONFLICT DO NOTHING
             """, (
                 int(row['commute_id']),
+                int(row['user_id']),
                 int(row['seats_offered'])
             ))
 
@@ -107,11 +111,12 @@ def load_to_db(data):
         
         for _, row in data['passengers'].iterrows():
             cursor.execute("""
-                INSERT INTO mi_blabla_car.passenger_commutes (commute_id, seats_taken)
-                VALUES (%s, %s)
+                INSERT INTO mi_blabla_car.passenger_commutes (commute_id, user_id, seats_requested)
+                VALUES (%s, %s,%s)
                 ON CONFLICT DO NOTHING
             """, (
                 int(row['commute_id']),
+                int(row['user_id']),
                 int(row['seats_requested'])
             ))
 
