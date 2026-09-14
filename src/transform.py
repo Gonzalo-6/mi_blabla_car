@@ -75,7 +75,13 @@ def transform_data(drivers_df, passengers_df):
    
     # 5. MAPEO LOCATION_ID
     
-    
+    for df in [drivers_df, passengers_df]:
+        df['origin_lat'] = df['origin_lat'].round(6)
+        df['origin_lon'] = df['origin_lon'].round(6)
+        df['dest_lat'] = df['dest_lat'].round(6)
+        df['dest_lon'] = df['dest_lon'].round(6)
+
+
     location_dict = {k: i+1 for i, k in enumerate(df_locations['key'])}
 
     for df in [drivers_df, passengers_df]:
@@ -90,9 +96,9 @@ def transform_data(drivers_df, passengers_df):
         
     
     df_commutes = pd.concat([
-        drivers_df[['id','user_id','origin_id','destination_id','leaves_at','created_at','deleted_at']],
-        passengers_df[['id','user_id','origin_id','destination_id','leaves_at','created_at','deleted_at']]
-    ]).drop_duplicates(subset=['id']).rename(columns={'id':'commute_id'})
+        drivers_df[['id','user_id','origin_lat','origin_lon','dest_lat','dest_lon','leaves_at','created_at','deleted_at']],
+        passengers_df[['id','user_id','origin_lat','origin_lon','dest_lat','dest_lon','leaves_at','created_at','deleted_at']]
+        ]).drop_duplicates(subset=['id']).rename(columns={'id':'commute_id'})
 
         
     # 7. DRIVER / PASSENGER
@@ -112,9 +118,10 @@ def transform_data(drivers_df, passengers_df):
     # 8. VALIDACIONES
         
     
-    assert df_commutes['origin_id'].isnull().sum() == 0
-    assert df_commutes['destination_id'].isnull().sum() == 0
-
+        assert df_commutes['origin_lat'].isnull().sum() == 0
+        assert df_commutes['origin_lon'].isnull().sum() == 0
+        assert df_commutes['dest_lat'].isnull().sum() == 0
+        assert df_commutes['dest_lon'].isnull().sum() == 0
 
         
     # OUTPUT
