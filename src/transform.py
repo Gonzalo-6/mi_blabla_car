@@ -70,7 +70,7 @@ def transform_data(drivers_df, passengers_df):
     ]).drop_duplicates().reset_index(drop=True)
 
     # Crear clave para mapear
-    df_locations['key'] = df_locations['lat'].astype(str) + ',' + df_locations['lon'].astype(str)
+    df_locations['key'] = list(zip(df_locations['lat'], df_locations['lon']))
 
    
     # 5. MAPEO LOCATION_ID
@@ -81,12 +81,14 @@ def transform_data(drivers_df, passengers_df):
         df['dest_lat'] = df['dest_lat'].round(6)
         df['dest_lon'] = df['dest_lon'].round(6)
 
+    df_locations['lat'] = df_locations['lat'].round(6)
+    df_locations['lon'] = df_locations['lon'].round(6)  
 
     location_dict = {k: i+1 for i, k in enumerate(df_locations['key'])}
 
     for df in [drivers_df, passengers_df]:
-        df['origin_key'] = df['origin_lat'].astype(str) + ',' + df['origin_lon'].astype(str)
-        df['dest_key'] = df['dest_lat'].astype(str) + ',' + df['dest_lon'].astype(str)
+        df['origin_key'] = list(zip(df['origin_lat'], df['origin_lon']))
+        df['dest_key'] = list(zip(df['dest_lat'], df['dest_lon']))
 
         df['origin_id'] = df['origin_key'].map(location_dict)
         df['destination_id'] = df['dest_key'].map(location_dict)

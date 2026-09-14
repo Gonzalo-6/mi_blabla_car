@@ -48,7 +48,7 @@ def load_to_db(data):
         rows = cursor.fetchall()
 
         location_dict = {
-            (round(row[1],6), round(row[2],6)): row[0]
+            (round(float(row[1]),6), round(float(row[2]),6)): row[0]
             for row in rows
         }
 
@@ -62,7 +62,10 @@ def load_to_db(data):
             dest_key = (round(row['dest_lat'],6), round(row['dest_lon'],6))
 
             if origin_key not in location_dict:
-                raise Exception(f"Origin no existe: {origin_key}")
+                print("NO EXISTE:", origin_key)
+                print("Ejemplo keys DB:", list(location_dict.keys())[:5])
+                raise Exception(origin_key)
+
 
             if dest_key not in location_dict:
                 raise Exception(f"Dest no existe: {dest_key}")
@@ -70,8 +73,6 @@ def load_to_db(data):
             origin_id = location_dict[origin_key]
             destination_id = location_dict[dest_key]
 
-            if origin_key not in location_dict:
-                print("NO EXISTE:", origin_key)
 
             cursor.execute("""
                 INSERT INTO mi_blabla_car.commutes
