@@ -102,6 +102,12 @@ def transform_data(drivers_df, passengers_df):
         passengers_df[['id','user_id','origin_lat','origin_lon','dest_lat','dest_lon','leaves_at','created_at','deleted_at']]
         ]).drop_duplicates(subset=['id']).rename(columns={'id':'commute_id'})
 
+    df_commutes['leaves_date'] = df_commutes['leaves_at'].dt.date
+    df_commutes['leaves_hour'] = df_commutes['leaves_at'].dt.hour
+
+    df_commutes['created_date'] = df_commutes['created_at'].dt.date
+    df_commutes['created_hour'] = df_commutes['created_at'].dt.hour
+
         
     # 7. DRIVER / PASSENGER
   
