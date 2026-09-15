@@ -47,9 +47,14 @@ passengers['leaves_at'] = pd.to_datetime(passengers['leaves_at'], errors='coerce
 passengers['created_at'] = pd.to_datetime(passengers['created_at'], errors='coerce')
 passengers['deleted_at'] = pd.to_datetime(passengers['deleted_at'], errors='coerce')
 
-# 🔥 convertir NaT → None (ESTO es lo que te faltaba bien)
-drivers = drivers.replace({pd.NaT: None})
-passengers = passengers.replace({pd.NaT: None})
+# 🔥 CLAVE: convertir a object
+for col in ['leaves_at', 'created_at', 'deleted_at']:
+    drivers[col] = drivers[col].astype(object)
+    passengers[col] = passengers[col].astype(object)
+
+# 🔥 AHORA sí: NaT → None
+drivers = drivers.where(pd.notnull(drivers), None)
+passengers = passengers.where(pd.notnull(passengers), None)
 
 # seleccionar columnas
 
@@ -80,6 +85,9 @@ passengers_data = passengers[[
 ]].values.tolist()
 
 print(drivers[['deleted_at']].head())
+print(drivers_data[0])
+
+print(drivers[['deleted_at']].head())
 print(type(drivers_data[0][-1]))
 
 # insertar drivers
@@ -102,7 +110,7 @@ execute_values(
     cursor,
     """
     INSERT INTO mi_blabla_car.passengers_trip 
-    (id, id_users, origin_lat, origin_lon, destination_lat, destination_lon, leaves_at, seats_requested, created_at, deleted_at)
+    (id, user_id, origin_lat, origin_lon, destination_lat, destination_lon, leaves_at, seats_requested, created_at, deleted_at)
     VALUES %s
     ON CONFLICT (id) DO NOTHING
     """,
